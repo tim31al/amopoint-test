@@ -1,0 +1,5 @@
+/.idea/
+/public/files/
+/vendor/
+/tests/
+/.env

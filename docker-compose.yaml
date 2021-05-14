@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  webserver:
+    image: altimofeev/webserver-localhost
+    ports:
+      - 80:80
+    depends_on:
+      - app
+    volumes:
+      - .:${WORKDIR}
+      - sock:${SOCKET_DIR}
+
+  app:
+    image: altimofeev/php-fpm
+    env_file:
+      - .env
+    working_dir: ${WORKDIR}
+    volumes:
+      - .:${WORKDIR}
+      - sock:${SOCKET_DIR}
+
+
+volumes:
+  sock:
+
+
+
