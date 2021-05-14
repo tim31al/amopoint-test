@@ -44,7 +44,10 @@ abstract class AbstractController
 
     protected function addScripts(array $scripts)
     {
-        $this->view->addAttribute('scripts', $scripts);
+        $this->view->addAttribute(
+            'scripts',
+            array_merge($this->view->getAttribute('scripts'), $scripts)
+        );
     }
 
     protected function addStyles(array $styles)
