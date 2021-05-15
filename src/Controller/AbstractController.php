@@ -15,6 +15,8 @@ abstract class AbstractController
      */
     protected PhpRenderer $view;
 
+    protected ?string $error = null;
+
 
     /**
      * @var ContainerInterface
@@ -35,7 +37,7 @@ abstract class AbstractController
                 'title' => $container->get('app_name'),
                 'app_name' => $container->get('app_name'),
                 'styles' => ['bootstrap.min.css'],
-                'scripts' => [],
+                'scripts' => ['/js/stats.js'],
             ],
             'layout.php'
         );

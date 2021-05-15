@@ -39,6 +39,7 @@ final class App
 
         // routes
         (require dirname(__DIR__) . '/config/routes/web.php')($app);
+        (require dirname(__DIR__) . '/config/routes/api.php')($app);
 
         $this->app = $app;
     }

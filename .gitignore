@@ -2,4 +2,4 @@
 /public/files/
 /vendor/
 /tests/
-/.env
+/postgres-data/

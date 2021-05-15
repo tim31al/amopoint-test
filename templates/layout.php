@@ -36,6 +36,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/task-two">Задание 2</a>
                     </li>
+	                <li class="nav-item">
+		                <a class="nav-link" href="/stats">Статистика</a>
+	                </li>
 
                 </ul>
             </div>
@@ -51,7 +54,7 @@
 <script src="/js/bootstrap.bundle.min.js"></script>
 <?php if (isset($scripts)) : ?>
     <?php foreach ($scripts as $script) : ?>
-        <script src="/js/<?= $script ?>"></script>
+        <script type="application/javascript" src="<?= $script ?>"></script>
     <?php endforeach; ?>
 <?php endif; ?>
 </body>

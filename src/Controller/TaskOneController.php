@@ -20,13 +20,11 @@ class TaskOneController extends AbstractController
     private FileUploaderInterface $fileUploader;
     private FileReaderInterface $fileReader;
 
-    private ?string $error = null;
-    private ?array $result = null;
 
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
-        $this->addScripts(['form-check.js']);
+        $this->addScripts(['/js/form-check.js']);
 
         $this->fileUploader = $container->get(FileUploaderInterface::class);
         $this->fileReader = $container->get(FileReaderInterface::class);
@@ -37,7 +35,7 @@ class TaskOneController extends AbstractController
         if ($request->getMethod() === 'POST') {
             try {
                 $filename = $this->fileUploader->upload($request, 'file');
-                $this->result = $this->fileReader->read($filename);
+                $result = $this->fileReader->read($filename);
             } catch (FileNotUploadedException | FileTypeException $e) {
                 $this->error = $e->getMessage();
             }
@@ -46,7 +44,7 @@ class TaskOneController extends AbstractController
 
         return $this->render($response, 'task-one/index.php', [
             'title' => self::TITLE,
-            'result' => $this->result,
+            'result' => $result ?? null,
             'error' => $this->error,
         ]);
     }

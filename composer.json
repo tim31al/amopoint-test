@@ -14,7 +14,9 @@
         "slim/slim": "4.*",
         "slim/psr7": "^1.4",
         "php-di/php-di": "^6.3",
-        "slim/php-view": "^3.1"
+        "slim/php-view": "^3.1",
+        "doctrine/orm": "^2.8",
+        "tuupola/slim-basic-auth": "^3.3"
     },
     "autoload": {
         "psr-4": {
