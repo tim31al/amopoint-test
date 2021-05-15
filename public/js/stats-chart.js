@@ -10,7 +10,7 @@ let hits = [[0,0]];
 
 
 function init() {
-  google.charts.load('current', {'packages':['line']});
+  google.charts.load('current', {'packages':['corechart']});
   google.charts.setOnLoadCallback(drawChart);
 }
 
@@ -18,20 +18,19 @@ function drawChart() {
 
   const data = new google.visualization.DataTable();
   data.addColumn('number', 'Час');
-  data.addColumn('number', 'Хиты');
-
-
+  data.addColumn('number', 'Hits');
   data.addRows(hits);
 
+
   const options = {
-    chart: {
-      title: 'Статистика посещения',
-    },
-    width: 900,
-    height: 500
+    title: 'Количество посещений',
+    curveType: 'function',
+    legend: {position: 'right', textStyle: {color: 'blue', fontSize: 16}},
+    pointsVisible: true,
+    pointShape: 'diamond',
   };
 
-  const chart = new google.charts.Line(document.getElementById('chart_div'));
+  const chart = new google.visualization.LineChart(document.getElementById('chart_div'));
 
-  chart.draw(data, google.charts.Line.convertOptions(options));
+  chart.draw(data, options);
 }
