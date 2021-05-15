@@ -7,7 +7,7 @@ const selectElement = rootElement.querySelector('select[name=type_val]');
 const inputElements = rootElement.querySelectorAll('input');
 
 
-const hideElements = (number) => {
+const hideElements = async (number) => {
   for (const element of inputElements) {
     if (element.name.includes(number)) {
       element.parentElement.classList.remove(HIDDEN_STYLE);
@@ -17,9 +17,9 @@ const hideElements = (number) => {
   }
 };
 
-const selectClickHandler = () => {
+const selectClickHandler = async () => {
   const number = selectElement.value;
-  hideElements(number);
+  await hideElements(number);
 };
 
 

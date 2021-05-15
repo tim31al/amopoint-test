@@ -6,6 +6,7 @@ namespace App\Service\FileUploader;
 
 use App\Service\FileUploader\Exception\FileNotUploadedException;
 use App\Service\FileUploader\Exception\FileTypeException;
+use App\Service\FileUploader\Exception\FileUploaderInvalidArgumentException;
 use App\Service\Storage\Exception\MoveFileException;
 use App\Service\Storage\FileStorageInterface;
 use Psr\Container\ContainerInterface;
@@ -13,12 +14,15 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 
 
-class TextFileUploaderService implements FileUploaderInterface
+abstract class AbstractFileUploader implements FileUploaderInterface
 {
+    const ERROR_MESSAGE = 'Не удалось загрузить файл.';
+
     private FileStorageInterface $fileStorage;
+    protected ?string $fileType = null;
+    protected ?string $checkFileTypeErrorMessage = null;
 
     /**
-     * TextFileUploaderService constructor.
      * @param \Psr\Container\ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -37,6 +41,7 @@ class TextFileUploaderService implements FileUploaderInterface
     public function upload(ServerRequestInterface $request, string $fieldName): string
     {
         $uploadedFiles = $request->getUploadedFiles();
+
         /* @var  \Psr\Http\Message\UploadedFileInterface $uploadedFile */
         $uploadedFile = $uploadedFiles[$fieldName];
 
@@ -51,7 +56,7 @@ class TextFileUploaderService implements FileUploaderInterface
 
                 $this->fileStorage->moveUploadedFile($filename, $uploadedFile);
             } catch (MoveFileException $e) {
-                throw new FileNotUploadedException('Не удалось загрузить файл.');
+                throw new FileNotUploadedException(self::ERROR_MESSAGE);
             }
 
             return $this->fileStorage->get($filename);
@@ -60,14 +65,19 @@ class TextFileUploaderService implements FileUploaderInterface
 
 
     /**
+     * Проверяет тип файла
+     *
      * @param \Psr\Http\Message\UploadedFileInterface $uploadedFile
      * @throws \App\Service\FileUploader\Exception\FileTypeException
      */
     private function checkFileType(UploadedFileInterface $uploadedFile)
     {
-        if ($uploadedFile->getClientMediaType() !== 'text/plain') {
-            throw new FileTypeException('Файл не является текстовым.');
+        if (null === $this->fileType || null === $this->checkFileTypeErrorMessage) {
+            throw new FileUploaderInvalidArgumentException();
+        }
+
+        if ($uploadedFile->getClientMediaType() !== $this->fileType) {
+            throw new FileTypeException($this->checkFileTypeErrorMessage);
         }
     }
-
 }

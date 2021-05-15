@@ -5,16 +5,13 @@ namespace App\Controller;
 
 
 use App\Service\FileReader\FileReaderInterface;
-use App\Service\FileReader\TextFileReader;
 use App\Service\FileUploader\Exception\FileNotUploadedException;
 use App\Service\FileUploader\Exception\FileTypeException;
 use App\Service\FileUploader\FileUploaderInterface;
-use App\Service\Storage\Exception\MoveFileException;
-use App\Service\Storage\FileStorage;
-use App\Service\Storage\FileStorageInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+
 
 class TaskOneController extends AbstractController
 {
@@ -22,6 +19,9 @@ class TaskOneController extends AbstractController
 
     private FileUploaderInterface $fileUploader;
     private FileReaderInterface $fileReader;
+
+    private ?string $error = null;
+    private ?array $result = null;
 
     public function __construct(ContainerInterface $container)
     {
@@ -34,23 +34,20 @@ class TaskOneController extends AbstractController
 
     public function index(Request $request, Response $response): Response
     {
-        $error = null;
-        $result = null;
-
         if ($request->getMethod() === 'POST') {
             try {
                 $filename = $this->fileUploader->upload($request, 'file');
-                $result = $this->fileReader->read($filename);
+                $this->result = $this->fileReader->read($filename);
             } catch (FileNotUploadedException | FileTypeException $e) {
-                $error = $e->getMessage();
+                $this->error = $e->getMessage();
             }
         }
 
 
         return $this->render($response, 'task-one/index.php', [
             'title' => self::TITLE,
-            'result' => $result,
-            'error' => $error,
+            'result' => $this->result,
+            'error' => $this->error,
         ]);
     }
 

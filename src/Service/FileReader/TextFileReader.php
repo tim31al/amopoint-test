@@ -6,6 +6,17 @@ namespace App\Service\FileReader;
 
 class TextFileReader implements FileReaderInterface
 {
+    private string $separator = PHP_EOL;
+
+    /**
+     * Установить разделитель строк для файла
+     *
+     * @param string $separator
+     */
+    public function setSeparator(string $separator)
+    {
+        $this->separator = $separator;
+    }
 
     /**
      * Читает текстовый файл и возвращает результат в виде массива строка = количество цифр в строке
@@ -16,7 +27,7 @@ class TextFileReader implements FileReaderInterface
     public function read(string $filename): array
     {
         $data = file_get_contents($filename);
-        $lines = explode(PHP_EOL, $data);
+        $lines = explode($this->separator, $data);
 
         $result = [];
         $counter = 0;

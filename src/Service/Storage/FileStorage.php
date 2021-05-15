@@ -8,6 +8,7 @@ use App\Service\Storage\Exception\MoveFileException;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\UploadedFileInterface;
 
+
 class FileStorage implements FileStorageInterface
 {
     private string $path;
