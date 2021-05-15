@@ -5,10 +5,14 @@ let hits = [[0,0]];
 (async () => {
   const data = await loadData({method: `GET`});
   hits = data.map((item) => [item.hour, item.count]);
+  init();
 })();
 
-google.charts.load('current', {'packages':['line']});
-google.charts.setOnLoadCallback(drawChart);
+
+function init() {
+  google.charts.load('current', {'packages':['line']});
+  google.charts.setOnLoadCallback(drawChart);
+}
 
 function drawChart() {
 
