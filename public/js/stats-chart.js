@@ -2,51 +2,64 @@
 
 const chartLineElement = document.getElementById('chart-line');
 const chartPieElement = document.getElementById('chart-pie');
-let data = null;
+const dateInputElement = document.getElementById('date-input');
 
-(async () => {
-  data = await loadData();
-})();
+let dateString;
 
-google.charts.load('current', {'packages': ['corechart']});
-google.charts.setOnLoadCallback(draw);
+init();
 
-async function draw() {
-  if (null === data) {
-    data = await loadData();
-  }
+function init() {
+  dateInputElement.addEventListener(`change`, handleDateChange);
+
+  google.charts.load('current', {'packages': ['corechart']});
+  google.charts.setOnLoadCallback(draw);
+}
+
+function setDate(strDate = null) {
+  const date = strDate ? new Date(strDate) : new Date();
+  dateString = date.toISOString().slice(0, 10);
+}
+
+async function handleDateChange(evt) {
+  setDate(evt.target.value);
+  await draw(true);
+}
+
+async function draw(byDate = false) {
+  const data = byDate
+    ? await loadData('GET', null, `date=${dateString}`)
+    : await loadData();
 
   const {hours, cities} = data;
 
   const hits = hours.map((item) => [item.hour, item.count]);
   const citiesChunks = cities.map((item) => [item.city, item.count]);
 
-  drawLineChart(hits);
-  drawPieChart(citiesChunks);
-  data = null;
+  await drawLineChart(hits);
+  await drawPieChart(citiesChunks);
 }
 
-function drawLineChart(hits) {
+async function drawLineChart(hits) {
   const data = new google.visualization.DataTable();
   data.addColumn('number', 'Hour');
   data.addColumn('number', 'Hits');
   data.addRows(hits);
 
-  const date = new Date().toDateString();
+
   const options = {
-    title: `Количество посещений ${date}` ,
+    title: `Количество посещений` ,
     curveType: 'function',
-    legend: {position: 'right', textStyle: {color: 'blue', fontSize: 16}},
     pointsVisible: true,
     pointShape: 'diamond',
-    hAxis: {gridlines: { count: 0 } },
+    hAxis: {gridlines: { count: 0 }, format: `0` },
+    vAxis: {format: `0`},
   };
 
   const chart = new google.visualization.LineChart(chartLineElement);
   chart.draw(data, options);
 }
 
-function drawPieChart(chunks) {
+async function drawPieChart(chunks) {
   const data = new google.visualization.DataTable();
   data.addColumn('string', 'Cities');
   data.addColumn('number', 'count');

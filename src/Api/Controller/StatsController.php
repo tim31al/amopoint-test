@@ -52,13 +52,38 @@ class StatsController extends AbstractController
 
     public function show(Request $request, Response $response): Response
     {
-        $hits = $this->repository->getStatsByHour();
-        $cities = $this->repository->getStatsByCity();
+        try {
+            $params = $request->getQueryParams();
+            $date = isset($params['date']) ? htmlspecialchars($params['date']) : null;
 
-        return $this->jsonResponse($response, [
-            'hours' => $hits,
-            'cities' => $cities,
+            $cities = [];
+            $hits = [];
+
+            $hits = $this->repository->getStatsByHour($date);
+            $cities = $this->repository->getStatsByCity($date);
+
+            return $this->jsonResponse($response, [
+                'hours' => $hits,
+                'cities' => $cities,
+                'date' => $date,
             ]);
+        } catch (\Exception $e) {
+            return $this->jsonResponse($response, [
+                'hours' => [],
+                'cities' => [],
+                'error' => $e->getMessage()
+            ]);
+        }
+//        $params = $request->getQueryParams();
+//        $date = $params['date'] ? htmlspecialchars($params['date']) : null;
+//
+//        $hits = $this->repository->getStatsByHour($date);
+//        $cities = $this->repository->getStatsByCity($date);
+
+//        return $this->jsonResponse($response, [
+//            'hours' => $hits,
+//            'cities' => $cities,
+//            ]);
     }
 
 }

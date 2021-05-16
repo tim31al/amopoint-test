@@ -7,9 +7,11 @@ const headers = new Headers();
 headers.append("Authorization", `Bearer ${TOKEN}`);
 headers.append("Content-Type", "application/json");
 
-const loadData = async (method = 'GET', data = null) => {
+const loadData = async (method = 'GET', data = null, params = null) => {
 
-  const response = await fetch(API_URL, {
+  const url = params ? `${API_URL}?${params}` : API_URL;
+
+  const response = await fetch(url, {
     method,
     body: data ? JSON.stringify(data) : null,
     headers,
