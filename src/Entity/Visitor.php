@@ -117,5 +117,10 @@ class Visitor
     {
         $this->dateVisit = new \DateTime('now');
     }
+
+//    public function setDateVisit(\DateTime $dateTime): void
+//    {
+//        $this->dateVisit = $dateTime;
+//    }
 }
 
