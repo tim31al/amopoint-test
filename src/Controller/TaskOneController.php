@@ -24,7 +24,7 @@ class TaskOneController extends AbstractController
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
-        $this->addScripts(['/js/form-check.js']);
+        $this->addScripts(['/js/stats.js', '/js/form-check.js']);
 
         $this->fileUploader = $container->get(FileUploaderInterface::class);
         $this->fileReader = $container->get(FileReaderInterface::class);

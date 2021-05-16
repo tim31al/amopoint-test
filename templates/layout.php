@@ -52,6 +52,7 @@
     </div>
 </main>
 <script src="/js/bootstrap.bundle.min.js"></script>
+<scripts src="/js/common.js"></scripts>
 <?php if (isset($scripts)) : ?>
     <?php foreach ($scripts as $script) : ?>
         <script type="application/javascript" src="<?= $script ?>"></script>

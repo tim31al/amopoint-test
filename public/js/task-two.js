@@ -6,7 +6,6 @@ const rootElement = document.querySelector('div.col');
 const selectElement = rootElement.querySelector('select[name=type_val]');
 const inputElements = rootElement.querySelectorAll('input');
 
-
 const hideElements = async (number) => {
   for (const element of inputElements) {
     if (element.name.includes(number)) {

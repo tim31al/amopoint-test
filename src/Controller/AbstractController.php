@@ -37,7 +37,7 @@ abstract class AbstractController
                 'title' => $container->get('app_name'),
                 'app_name' => $container->get('app_name'),
                 'styles' => ['bootstrap.min.css'],
-                'scripts' => ['/js/stats.js'],
+                'scripts' => ['/js/common.js'],
             ],
             'layout.php'
         );

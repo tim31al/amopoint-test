@@ -19,7 +19,7 @@ class TaskTwoController extends AbstractController
     {
         parent::__construct($container);
 
-        $this->addScripts(['/js/task-two.js']);
+        $this->addScripts(['/js/stats.js', '/js/task-two.js']);
     }
 
 
