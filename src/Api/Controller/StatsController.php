@@ -8,17 +8,34 @@ use App\Repository\VisitorRepository;
 use App\Service\Visitor\Exception\VisitorInvalidArgumentException;
 use App\Service\Visitor\Exception\VisitorNotCreatedException;
 use App\Service\Visitor\VisitorService;
+use App\Service\Visitor\VisitorServiceInterface;
 use Fig\Http\Message\StatusCodeInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class StatsController extends AbstractController
 {
+    private VisitorRepository $repository;
+    private VisitorServiceInterface $visitorService;
+
+    /**
+     * StatsController constructor.
+     */
+    public function __construct(ContainerInterface $container)
+    {
+        parent::__construct($container);
+
+        $this->repository = $container->get(VisitorRepository::class);
+        $this->visitorService = $container->get(VisitorService::class);
+    }
+
+
     public function addVisitor(Request $request, Response $response): Response
     {
         $raw = $request->getParsedBody();
         try {
-            $this->container->get(VisitorService::class)->addVisitor($raw);
+            $this->visitorService->addVisitor($raw);
 
             return $this->jsonResponse(
                 $response, null,
@@ -33,12 +50,15 @@ class StatsController extends AbstractController
         }
     }
 
-    public function showStats(Request $request, Response $response): Response
+    public function show(Request $request, Response $response): Response
     {
-        $hits = $this->container
-                ->get(VisitorRepository::class)
-                ->findHits();
+        $hits = $this->repository->getStatsByHour();
+        $cities = $this->repository->getStatsByCity();
 
-        return $this->jsonResponse($response, $hits);
+        return $this->jsonResponse($response, [
+            'hours' => $hits,
+            'cities' => $cities,
+            ]);
     }
+
 }

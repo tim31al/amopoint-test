@@ -17,7 +17,7 @@ const getVisitorData = async () => {
 (async () => {
   try {
     const userData = await getVisitorData();
-    await loadData({method: `POST`, data: userData});
+    await loadData(`POST`, userData);
   } catch (err) {
     console.log(err);
   }

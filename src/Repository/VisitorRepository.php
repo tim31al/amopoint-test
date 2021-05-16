@@ -21,9 +21,9 @@ class VisitorRepository
         $this->entityManager = $container->get(EntityManager::class);
     }
 
-    public function findHits()
+    public function getStatsByHour()
     {
-        $sql = 'SELECT DISTINCT extract(HOUR FROM datevisit)::integer as hour, count(id) as count ' .
+        $sql = 'SELECT DISTINCT extract(HOUR FROM datevisit)::integer as hour, count(distinct ip) as count ' .
                'FROM visitors WHERE datevisit::date = current_date GROUP BY hour ORDER BY hour';
 
         $conn = $this->entityManager->getConnection();
@@ -32,4 +32,15 @@ class VisitorRepository
         return $stmt->fetchAll();
     }
 
+    public function getStatsByCity()
+    {
+        $sql = 'SELECT DISTINCT city, COUNT(city) as count FROM visitors GROUP BY city';
+
+        $conn = $this->entityManager->getConnection();
+        $stmt = $conn->prepare($sql);
+        $stmt->executeStatement();
+        return $stmt->fetchAll();
+    }
+
 }
+
