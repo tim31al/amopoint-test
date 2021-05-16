@@ -16,7 +16,8 @@ class VisitorBuilder implements VisitorBuilderInterface
         $visitor
             ->setCity($raw['city'])
             ->setIp($raw['ip'])
-            ->setDevice($raw['device']);
+            ->setDevice($raw['device'])
+            ->setDateVisit(new \DateTime('now'));
 
 
         return $visitor;

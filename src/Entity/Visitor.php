@@ -110,17 +110,17 @@ class Visitor
         return $this->dateVisit;
     }
 
-    /**
-     * @ORM\PrePersist()
-     */
-    public function setDateVisit(): void
-    {
-        $this->dateVisit = new \DateTime('now');
-    }
-
-//    public function setDateVisit(\DateTime $dateTime): void
+//    /**
+//     * @ORM\PrePersist()
+//     */
+//    public function setDateVisit(): void
 //    {
-//        $this->dateVisit = $dateTime;
+//        $this->dateVisit = new \DateTime('now');
 //    }
+
+    public function setDateVisit(\DateTime $dateTime): void
+    {
+        $this->dateVisit = $dateTime;
+    }
 }
 

@@ -9,7 +9,10 @@ let dateString;
 init();
 
 function init() {
+  setDate()
+
   dateInputElement.addEventListener(`change`, handleDateChange);
+  dateInputElement.value = dateString;
 
   google.charts.load('current', {'packages': ['corechart']});
   google.charts.setOnLoadCallback(draw);
@@ -22,13 +25,11 @@ function setDate(strDate = null) {
 
 async function handleDateChange(evt) {
   setDate(evt.target.value);
-  await draw(true);
+  await draw();
 }
 
-async function draw(byDate = false) {
-  const data = byDate
-    ? await loadData('GET', null, `date=${dateString}`)
-    : await loadData();
+async function draw() {
+  const data = await loadData('GET', null, `date=${dateString}`);
 
   const {hours, cities} = data;
 

@@ -4,7 +4,6 @@
 namespace App\Repository;
 
 
-use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,51 +24,29 @@ class VisitorRepository
         $this->connection = $this->entityManager->getConnection();
     }
 
-    public function getStatsByHour(string $date = null)
+    public function getStatsByHour(string $date)
     {
-        if (null !== $date) {
-            $sql = 'SELECT DISTINCT extract(HOUR FROM datevisit)::integer as hour, count(distinct ip) as count ' .
-                'FROM visitors WHERE datevisit::date = ? GROUP BY hour ORDER BY hour';
 
-            $stmt = $this->connection->prepare($sql);
-            $stmt->bindValue(1, $this->getDateTime($date), 'datetime');
-        } else {
-            $sql = 'SELECT DISTINCT extract(DAY FROM datevisit)::integer as hour, count(distinct ip) as count ' .
-                'FROM visitors GROUP BY hour ORDER BY hour';
+        $sql = 'SELECT DISTINCT extract(HOUR FROM datevisit)::integer as hour, count(distinct ip) as count ' .
+            'FROM visitors WHERE datevisit::date = ? GROUP BY hour ORDER BY hour';
 
-            $stmt = $this->connection->prepare($sql);
-        }
-
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue(1, new \DateTime($date), 'datetime');
         $stmt->executeStatement();
+
         return $stmt->fetchAll();
     }
 
-    public function getStatsByCity(string $date = null)
+    public function getStatsByCity(string $date)
     {
-        if (null !== $date) {
-            $sql = 'SELECT DISTINCT city, COUNT(city) as count FROM visitors WHERE datevisit::date = ? GROUP BY city';
 
-            $stmt = $this->connection->prepare($sql);
-            $stmt->bindValue(1, $this->getDateTime($date), 'datetime');
-        } else {
-            $sql = 'SELECT DISTINCT city, COUNT(city) as count FROM visitors GROUP BY city';
+        $sql = 'SELECT DISTINCT city, COUNT(city) as count FROM visitors WHERE datevisit::date = ? GROUP BY city';
 
-            $stmt = $this->connection->prepare($sql);
-        }
-
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindValue(1, new \DateTime($date), 'datetime');
         $stmt->executeStatement();
+
         return $stmt->fetchAll();
-    }
-
-    private function getDateTime(string $date): DateTime
-    {
-        try {
-            $dateObj = new DateTime($date);
-        } catch (\Exception $e) {
-            $dateObj = new DateTime('now');
-        }
-
-        return $dateObj;
     }
 
 }

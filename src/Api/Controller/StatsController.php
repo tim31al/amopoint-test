@@ -54,10 +54,7 @@ class StatsController extends AbstractController
     {
         try {
             $params = $request->getQueryParams();
-            $date = isset($params['date']) ? htmlspecialchars($params['date']) : null;
-
-            $cities = [];
-            $hits = [];
+            $date = isset($params['date']) ? htmlspecialchars($params['date']) : 'now';
 
             $hits = $this->repository->getStatsByHour($date);
             $cities = $this->repository->getStatsByCity($date);
